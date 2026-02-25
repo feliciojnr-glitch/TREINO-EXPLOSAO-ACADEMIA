@@ -100,6 +100,22 @@
   button:active { background-color: #666; }
   button.btn-time { background-color: #2980b9; }
   button.btn-reset { background-color: #c0392b; flex: 0.5; }
+
+  /* Botão de Zerar a Semana */
+  .reset-all-container {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+  .btn-reset-all {
+    background-color: #e74c3c;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  }
+  .btn-reset-all:hover { background-color: #c0392b; }
   
   .done { opacity: 0.4; text-decoration: line-through; }
   .time-up { color: #2ecc71; animation: pulse 1s infinite; }
@@ -444,13 +460,47 @@
     </div>
   </div>
 
+  <div class="reset-all-container">
+    <button class="btn-reset-all" onclick="resetAll()">🔄 Zerar a Semana Inteira</button>
+  </div>
+
 <script>
+  // Ao carregar a página, verifica se há algo salvo no localStorage
+  document.addEventListener('DOMContentLoaded', () => {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(box => {
+      const cardId = box.closest('.exercise-card').id;
+      const isDone = localStorage.getItem(cardId) === 'true';
+      box.checked = isDone;
+      if (isDone) {
+        document.getElementById(cardId).classList.add('done');
+      }
+    });
+  });
+
+  // Função chamada ao marcar/desmarcar o exercício
   function toggleDone(checkbox, cardId) {
     const card = document.getElementById(cardId);
     if (checkbox.checked) {
       card.classList.add('done');
+      localStorage.setItem(cardId, 'true'); // Salva no celular
     } else {
       card.classList.remove('done');
+      localStorage.setItem(cardId, 'false'); // Remove do celular
+    }
+  }
+
+  // Função para limpar todos os dados salvos
+  function resetAll() {
+    if(confirm('Tem certeza que deseja zerar todos os exercícios da semana?')) {
+      localStorage.clear(); // Limpa a memória do navegador
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(box => {
+        box.checked = false;
+        const cardId = box.closest('.exercise-card').id;
+        document.getElementById(cardId).classList.remove('done');
+      });
+      alert('Semana zerada com sucesso! Bom treino!');
     }
   }
 
