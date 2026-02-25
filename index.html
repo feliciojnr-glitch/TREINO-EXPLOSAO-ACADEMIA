@@ -1,1 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Treino Profissional - Vôlei de Areia</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    padding: 15px;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1 { 
+    color: #f39c12; 
+    text-align: center; 
+    border-bottom: 2px solid #333; 
+    padding-bottom: 10px;
+    font-size: 1.5em;
+  }
+  h2 { 
+    color: #ffffff; 
+    background-color: #333; 
+    padding: 12px; 
+    border-radius: 6px; 
+    margin-top: 25px; 
+    font-size: 1.2em;
+    text-align: center;
+  }
+  .exercise-card {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    transition: opacity 0.3s ease;
+  }
+  .exercise-header { 
+    display: flex; 
+    align-items: flex-start; 
+    gap: 12px; 
+  }
+  input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    margin-top: 3px;
+    accent-color: #f39c12;
+  }
+  .exercise-info { flex-grow: 1; }
+  .exercise-name { 
+    font-size: 1.25em; 
+    font-weight: bold; 
+    color: #f39c12; 
+    text-decoration: none;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .sets-reps { font-weight: bold; color: #fff; margin: 5px 0; font-size: 1em; }
+  .load { font-weight: bold; color: #3498db; margin: 3px 0; font-size: 0.95em; }
+  .obs { font-size: 0.9em; color: #aaa; font-style: italic; margin-top: 5px; line-height: 1.4; }
+  
+  /* Área do Cronômetro */
+  .timer-section {
+    margin-top: 15px;
+    background-color: #2a2a2a;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .timer-display { 
+    font-family: monospace; 
+    font-size: 2.2em; 
+    font-weight: bold; 
+    color: #fff;
+    letter-spacing: 2px;
+  }
+  .timer-controls {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+    justify-content: center;
+  }
+  button {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 12px 0;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: bold;
+    flex: 1;
+    touch-action: manipulation;
+  }
+  button:active { background-color: #666; }
+  button.btn-time { background-color: #2980b9; }
+  button.btn-reset { background-color: #c0392b; flex: 0.5; }
 
+  /* Botão de Zerar a Semana */
+  .reset-all-container {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+  .btn-reset-all {
+    background-color: #e74c3c;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  }
+  .btn-reset-all:hover { background-color: #c0392b; }
+  
+  .done { opacity: 0.4; text-decoration: line-through; }
+  .time-up { color: #2ecc71; animation: pulse 1s infinite; }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+
+  <h1>🏐 Treino Força & Potência</h1>
+
+  <div class="day-section">
+    <h2>SEGUNDA (Upper Body - Força)</h2>
+    
+    <div class="exercise-card" id="card-seg-1">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-seg-1')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Supino+Reto+Barra+tutorial" target="_blank" class="exercise-name">Supino Reto 🔗</a>
+          <p class="sets-reps">4 Séries x 5 a 8 Reps</p>
+          <p class="load">🏋️ 32kg a 35kg (cada lado)</p>
+          <p class="obs">Foco em força pura. Descanso longo (2 min).</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-seg-1">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('seg-1', 90)">90s</button>
+          <button class="btn-time" onclick="startRest('seg-1', 120)">120s</button>
+          <button class="btn-reset" onclick="resetTimer('seg-1')">⏹</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-seg-2">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-seg-2')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Remada+Curvada+Barra+tutorial" target="_blank" class="exercise-name">Remada Curvada 🔗</a>
+          <p class="sets-reps">4 Séries x 6 a 8 Reps</p>
+          <p class="load">🏋️ 20kg a 25kg (cada lado)</p>
+          <p class="obs">Costas fortes estabilizam o ombro para o ataque na rede.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-seg-2">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('seg-2', 90)">90s</button>
+          <button class="btn-time" onclick="startRest('seg-2', 120)">120s</button>
+          <button class="btn-reset" onclick="resetTimer('seg-2')">⏹</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-seg-3">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-seg-3')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Flexão+Pliométrica+bater+palma" target="_blank" class="exercise-name">Flexão Pliométrica 🔗</a>
+          <p class="sets-reps">3 Séries x 5 Reps</p>
+          <p class="load">🏋️ Peso Corporal</p>
+          <p class="obs">Explosão máxima! Ensina o peito a ser rápido.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-seg-3">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('seg-3', 60)">60s</button>
+          <button class="btn-time" onclick="startRest('seg-3', 90)">90s</button>
+          <button class="btn-reset" onclick="resetTimer('seg-3')">⏹</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="exercise-card" id="card-seg-4">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-seg-4')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Desenvolvimento+Halteres" target="_blank" class="exercise-name">Desenvolvimento Halteres 🔗</a>
+          <p class="sets-reps">3 Séries x 8 a 10 Reps</p>
+          <p class="load">🏋️ Halteres de 16kg a 20kg</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-seg-4">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('seg-4', 60)">60s</button>
+          <button class="btn-time" onclick="startRest('seg-4', 90)">90s</button>
+          <button class="btn-reset" onclick="resetTimer('seg-4')">⏹</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-section">
+    <h2>TERÇA (Lower Body - Salto Vertical)</h2>
+    
+    <div class="exercise-card" id="card-ter-1">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-ter-1')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Jump+Squat+peso+corporal" target="_blank" class="exercise-name">Agachamento c/ Salto 🔗</a>
+          <p class="sets-reps">3 Séries x 5 Reps</p>
+          <p class="load">🏋️ Peso Corporal</p>
+          <p class="obs">Aquece o sistema nervoso. Salte o mais alto possível.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-ter-1">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('ter-1', 60)">60s</button>
+          <button class="btn-time" onclick="startRest('ter-1', 90)">90s</button>
+          <button class="btn-reset" onclick="resetTimer('ter-1')">⏹</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-ter-2">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-ter-2')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Agachamento+Livre+com+pausa" target="_blank" class="exercise-name">Agachamento Livre (Pausado) 🔗</a>
+          <p class="sets-reps">4 Séries x 4 a 6 Reps</p>
+          <p class="load">🏋️ 40kg a 45kg (cada lado)</p>
+          <p class="obs">PAUSA 1 seg embaixo. Suba como um foguete! É o construtor do salto.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-ter-2">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('ter-2', 120)">120s</button>
+          <button class="btn-time" onclick="startRest('ter-2', 150)">150s</button>
+          <button class="btn-reset" onclick="resetTimer('ter-2')">⏹</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-ter-3">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-ter-3')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Avanço+Pliométrico+Afundo+com+salto" target="_blank" class="exercise-name">Afundo com Salto 🔗</a>
+          <p class="sets-reps">3 Séries x 5 Reps (por perna)</p>
+          <p class="load">🏋️ Peso Corporal ou halteres de 5kg</p>
+          <p class="obs">Treina a sua agilidade e troca de direção rápida na areia.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-ter-3">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('ter-3', 60)">60s</button>
+          <button class="btn-time" onclick="startRest('ter-3', 90)">90s</button>
+          <button class="btn-reset" onclick="resetTimer('ter-3')">⏹</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="exercise-card" id="card-ter-4">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-ter-4')">
+        <div class="exercise-info">
+          <a href="#" class="exercise-name">Cadeira Extensora + Panturrilha</a>
+          <p class="sets-reps">3-4 Séries (Acessórios)</p>
+          <p class="obs">Panturrilha 15-20 reps rápidas. Extensora 10-12 reps.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-section">
+    <h2>QUARTA (Core e Mobilidade)</h2>
+    
+    <div class="exercise-card" id="card-qua-1">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-qua-1')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Woodchopper+Polia" target="_blank" class="exercise-name">Woodchopper na Polia 🔗</a>
+          <p class="sets-reps">3 Séries x 10 a 12 Reps (por lado)</p>
+          <p class="load">🏋️ Polia: 15kg a 20kg</p>
+          <p class="obs">Prepara o abdômen para o movimento de rotação do "corte" na rede.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-qua-1">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('qua-1', 45)">45s</button>
+          <button class="btn-time" onclick="startRest('qua-1', 60)">60s</button>
+          <button class="btn-reset" onclick="resetTimer('qua-1')">⏹</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-qua-2">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-qua-2')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Prancha+com+toque+no+ombro" target="_blank" class="exercise-name">Prancha c/ Toque no Ombro 🔗</a>
+          <p class="sets-reps">3 Séries x 45 Segundos</p>
+          <p class="load">🏋️ Peso Corporal</p>
+          <p class="obs">Mantenha o quadril travado sem balançar pros lados.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-qua-2">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('qua-2', 45)">45s</button>
+          <button class="btn-time" onclick="startRest('qua-2', 60)">60s</button>
+          <button class="btn-reset" onclick="resetTimer('qua-2')">⏹</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-section">
+    <h2>QUINTA (Upper Body - Tração)</h2>
+    
+    <div class="exercise-card" id="card-qui-1">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-qui-1')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Puxada+Frente" target="_blank" class="exercise-name">Puxada Frente 🔗</a>
+          <p class="sets-reps">4 Séries x 8 a 10 Reps</p>
+          <p class="load">🏋️ 60kg a 65kg</p>
+          <p class="obs">Puxe explosivo (rápido) e segure a volta bem devagar (3 segundos).</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-qui-1">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('qui-1', 60)">60s</button>
+          <button class="btn-time" onclick="startRest('qui-1', 90)">90s</button>
+          <button class="btn-reset" onclick="resetTimer('qui-1')">⏹</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-qui-2">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-qui-2')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Remada+Serrote+Unilateral" target="_blank" class="exercise-name">Remada Serrote (Unilateral) 🔗</a>
+          <p class="sets-reps">3 Séries x 8 a 10 Reps</p>
+          <p class="load">🏋️ Halter de 24kg a 30kg</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-qui-2">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('qui-2', 60)">60s</button>
+          <button class="btn-time" onclick="startRest('qui-2', 90)">90s</button>
+          <button class="btn-reset" onclick="resetTimer('qui-2')">⏹</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-qui-3">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-qui-3')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Rotação+Externa+Polia+Manguito" target="_blank" class="exercise-name">Manguito Rotador na Polia 🔗</a>
+          <p class="sets-reps">3 Séries x 15 Reps</p>
+          <p class="load">🏋️ Polia: 5kg a 10kg</p>
+          <p class="obs">Seguro de vida do seu ombro! Não coloque peso, foque no movimento perfeito.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-qui-3">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('qui-3', 45)">45s</button>
+          <button class="btn-time" onclick="startRest('qui-3', 60)">60s</button>
+          <button class="btn-reset" onclick="resetTimer('qui-3')">⏹</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-section">
+    <h2>SEXTA (Posterior - O Motor do Salto)</h2>
+    
+    <div class="exercise-card" id="card-sex-1">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-sex-1')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Broad+Jump+Salto+Distância" target="_blank" class="exercise-name">Salto em Distância 🔗</a>
+          <p class="sets-reps">3 Séries x 4 Saltos</p>
+          <p class="load">🏋️ Peso Corporal</p>
+          <p class="obs">Foco em saltar o mais longe possível p/ frente.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-sex-1">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('sex-1', 60)">60s</button>
+          <button class="btn-time" onclick="startRest('sex-1', 90)">90s</button>
+          <button class="btn-reset" onclick="resetTimer('sex-1')">⏹</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="card-sex-2">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-sex-2')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Levantamento+Terra+Romano+Stiff" target="_blank" class="exercise-name">RDL / Stiff 🔗</a>
+          <p class="sets-reps">4 Séries x 5 a 8 Reps</p>
+          <p class="load">🏋️ 30kg a 35kg (cada lado)</p>
+          <p class="obs">Foco total no glúteo e posterior da coxa.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-sex-2">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('sex-2', 90)">90s</button>
+          <button class="btn-time" onclick="startRest('sex-2', 120)">120s</button>
+          <button class="btn-reset" onclick="resetTimer('sex-2')">⏹</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="exercise-card" id="card-sex-3">
+      <div class="exercise-header">
+        <input type="checkbox" onchange="toggleDone(this, 'card-sex-3')">
+        <div class="exercise-info">
+          <a href="https://www.youtube.com/results?search_query=Agachamento+Bulgaro" target="_blank" class="exercise-name">Búlgaro (Unilateral) 🔗</a>
+          <p class="sets-reps">3 Séries x 8 a 10 Reps (por perna)</p>
+          <p class="load">🏋️ Halteres de 14kg a 18kg</p>
+          <p class="obs">Treina o equilíbrio para defender e atacar na areia fofa.</p>
+        </div>
+      </div>
+      <div class="timer-section">
+        <div class="timer-display" id="display-sex-3">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-time" onclick="startRest('sex-3', 60)">60s</button>
+          <button class="btn-time" onclick="startRest('sex-3', 90)">90s</button>
+          <button class="btn-reset" onclick="resetTimer('sex-3')">⏹</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reset-all-container">
+    <button class="btn-reset-all" onclick="resetAll()">🔄 Zerar a Semana Inteira</button>
+  </div>
+
+<script>
+  // Ao carregar a página, verifica se há algo salvo no localStorage
+  document.addEventListener('DOMContentLoaded', () => {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(box => {
+      const cardId = box.closest('.exercise-card').id;
+      const isDone = localStorage.getItem(cardId) === 'true';
+      box.checked = isDone;
+      if (isDone) {
+        document.getElementById(cardId).classList.add('done');
+      }
+    });
+  });
+
+  // Função chamada ao marcar/desmarcar o exercício
+  function toggleDone(checkbox, cardId) {
+    const card = document.getElementById(cardId);
+    if (checkbox.checked) {
+      card.classList.add('done');
+      localStorage.setItem(cardId, 'true'); // Salva no celular
+    } else {
+      card.classList.remove('done');
+      localStorage.setItem(cardId, 'false'); // Remove do celular
+    }
+  }
+
+  // Função para limpar todos os dados salvos
+  function resetAll() {
+    if(confirm('Tem certeza que deseja zerar todos os exercícios da semana?')) {
+      localStorage.clear(); // Limpa a memória do navegador
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(box => {
+        box.checked = false;
+        const cardId = box.closest('.exercise-card').id;
+        document.getElementById(cardId).classList.remove('done');
+      });
+      alert('Semana zerada com sucesso! Bom treino!');
+    }
+  }
+
+  const timers = {};
+
+  function startRest(id, seconds) {
+    if (timers[id] && timers[id].interval) {
+      clearInterval(timers[id].interval);
+    }
+    
+    const display = document.getElementById('display-' + id);
+    display.classList.remove('time-up');
+    
+    timers[id] = { time: seconds, interval: null };
+    updateDisplay(id);
+
+    timers[id].interval = setInterval(() => {
+      timers[id].time--;
+      if (timers[id].time > 0) {
+        updateDisplay(id);
+      } else {
+        clearInterval(timers[id].interval);
+        display.textContent = "BORA!";
+        display.classList.add('time-up');
+        if (navigator.vibrate) { navigator.vibrate([200, 100, 200]); }
+      }
+    }, 1000);
+  }
+
+  function resetTimer(id) {
+    if (timers[id] && timers[id].interval) {
+      clearInterval(timers[id].interval);
+    }
+    timers[id] = { time: 0, interval: null };
+    const display = document.getElementById('display-' + id);
+    display.textContent = "00:00";
+    display.classList.remove('time-up');
+  }
+
+  function updateDisplay(id) {
+    const display = document.getElementById('display-' + id);
+    const minutes = String(Math.floor(timers[id].time / 60)).padStart(2, '0');
+    const seconds = String(timers[id].time % 60).padStart(2, '0');
+    display.textContent = `${minutes}:${seconds}`;
+  }
+</script>
+</body>
+</html>
