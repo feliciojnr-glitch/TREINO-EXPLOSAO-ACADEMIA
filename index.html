@@ -12,6 +12,8 @@
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     padding: 15px;
     margin: 0;
+    max-width: 100vw;
+    overflow-x: hidden; /* Impede a tela de "sambar" pros lados */
     -webkit-font-smoothing: antialiased;
   }
   h1 { 
@@ -25,6 +27,7 @@
   /* DASHBOARD STYLES */
   .dash-container {
     display: flex;
+    flex-wrap: wrap; /* Garante que não vaze da tela */
     gap: 10px;
     margin-bottom: 25px;
   }
@@ -33,7 +36,8 @@
     border: 1px solid #444;
     border-radius: 10px;
     padding: 15px;
-    flex: 1;
+    flex: 1 1 45%;
+    min-width: 140px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
   .dashboard.destaque { border-color: #f39c12; }
@@ -45,26 +49,31 @@
   .dash-item strong { color: #3498db; }
   .dash-item .highlight { color: #2ecc71; font-weight: bold; font-size: 1.1em;}
 
-  /* ÁREA DE CARDIO */
+  /* ÁREA DE CARDIO CORRIGIDA */
   .cardio-section {
     background-color: #1e1e1e;
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 25px;
     border-left: 4px solid #e74c3c;
+    width: 100%;
   }
   .cardio-section h3 { margin: 0 0 10px 0; color: #e74c3c; font-size: 1.2em; }
-  .cardio-inputs { display: flex; gap: 8px; }
+  .cardio-inputs { 
+    display: flex; 
+    flex-wrap: wrap; /* Faz os botões descerem de linha se não couber */
+    gap: 10px; 
+  }
   .cardio-inputs input {
     background-color: #2a2a2a; border: 1px solid #444; color: #fff;
-    padding: 12px; border-radius: 6px; font-size: 1em;
+    padding: 12px; border-radius: 6px; font-size: 1em; width: 100%;
   }
-  .cardio-inputs input[type="text"] { flex: 2; }
-  .cardio-inputs input[type="number"] { flex: 1; text-align: center; }
-  .btn-cardio { background-color: #e74c3c; color: #fff; border: none; border-radius: 6px; font-weight: bold; flex: 1; cursor: pointer; }
+  .cardio-inputs input[type="text"] { flex: 1 1 100%; min-width: 0; }
+  .cardio-inputs input[type="number"] { flex: 1 1 40%; min-width: 0; }
+  .btn-cardio { background-color: #e74c3c; color: #fff; border: none; border-radius: 6px; font-weight: bold; flex: 1 1 40%; cursor: pointer; padding: 12px; }
   .btn-cardio:active { background-color: #c0392b; }
 
-  /* GAVETAS EXPANSÍVEIS (DETAILS/SUMMARY) */
+  /* GAVETAS EXPANSÍVEIS */
   details { margin-bottom: 15px; background-color: #1e1e1e; border-radius: 8px; overflow: hidden; }
   summary {
     background-color: #333; color: #ffffff; padding: 15px; font-size: 1.1em; font-weight: bold;
@@ -89,7 +98,7 @@
   .load { font-weight: bold; color: #3498db; margin: 3px 0; font-size: 0.9em; }
   .obs { font-size: 0.85em; color: #aaa; font-style: italic; margin-top: 5px; line-height: 1.4; }
   
-  /* CRONÔMETRO */
+  /* CRONÔMETRO ATUALIZADO */
   .timer-section { margin-top: 15px; background-color: #1a1a1a; padding: 10px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .timer-display { font-family: monospace; font-size: 2em; font-weight: bold; color: #fff; letter-spacing: 2px; }
   .timer-controls { display: flex; width: 100%; gap: 6px; justify-content: center; }
@@ -97,11 +106,12 @@
   button:active { background-color: #666; }
   button.btn-time { background-color: #2980b9; }
   button.btn-reset { background-color: #c0392b; flex: 0.4; }
+  button.btn-add { background-color: #8e44ad; flex: 0.4; } /* NOVO BOTAO +1 */
   
   .time-up { color: #2ecc71; animation: pulse 1s infinite; }
   @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-  .reset-all-container { text-align: center; margin-top: 30px; margin-bottom: 30px; }
+  .reset-all-container { text-align: center; margin-top: 30px; margin-bottom: 30px; width: 100%; }
   .btn-reset-all { background-color: #444; color: #fff; border: 1px solid #666; padding: 15px 30px; font-size: 1.1em; width: 100%; border-radius: 8px; }
   .btn-reset-all:active { background-color: #222; }
 </style>
@@ -152,6 +162,7 @@
             <button class="btn-time" onclick="startRest('seg-1', 90)">90s</button>
             <button class="btn-time" onclick="startRest('seg-1', 120)">120s</button>
             <button class="btn-reset" onclick="resetTimer('seg-1')">⏹</button>
+            <button class="btn-add" onclick="computeSet('seg-1')">+1</button>
           </div>
         </div>
       </div>
@@ -171,6 +182,7 @@
             <button class="btn-time" onclick="startRest('seg-2', 90)">90s</button>
             <button class="btn-time" onclick="startRest('seg-2', 120)">120s</button>
             <button class="btn-reset" onclick="resetTimer('seg-2')">⏹</button>
+            <button class="btn-add" onclick="computeSet('seg-2')">+1</button>
           </div>
         </div>
       </div>
@@ -190,6 +202,7 @@
             <button class="btn-time" onclick="startRest('seg-3', 60)">60s</button>
             <button class="btn-time" onclick="startRest('seg-3', 90)">90s</button>
             <button class="btn-reset" onclick="resetTimer('seg-3')">⏹</button>
+            <button class="btn-add" onclick="computeSet('seg-3')">+1</button>
           </div>
         </div>
       </div>
@@ -209,6 +222,7 @@
             <button class="btn-time" onclick="startRest('seg-4', 60)">60s</button>
             <button class="btn-time" onclick="startRest('seg-4', 90)">90s</button>
             <button class="btn-reset" onclick="resetTimer('seg-4')">⏹</button>
+            <button class="btn-add" onclick="computeSet('seg-4')">+1</button>
           </div>
         </div>
       </div>
@@ -235,6 +249,7 @@
             <button class="btn-time" onclick="startRest('ter-1', 60)">60s</button>
             <button class="btn-time" onclick="startRest('ter-1', 90)">90s</button>
             <button class="btn-reset" onclick="resetTimer('ter-1')">⏹</button>
+            <button class="btn-add" onclick="computeSet('ter-1')">+1</button>
           </div>
         </div>
       </div>
@@ -254,6 +269,7 @@
             <button class="btn-time" onclick="startRest('ter-2', 120)">120s</button>
             <button class="btn-time" onclick="startRest('ter-2', 150)">150s</button>
             <button class="btn-reset" onclick="resetTimer('ter-2')">⏹</button>
+            <button class="btn-add" onclick="computeSet('ter-2')">+1</button>
           </div>
         </div>
       </div>
@@ -273,6 +289,7 @@
             <button class="btn-time" onclick="startRest('ter-3', 60)">60s</button>
             <button class="btn-time" onclick="startRest('ter-3', 90)">90s</button>
             <button class="btn-reset" onclick="resetTimer('ter-3')">⏹</button>
+            <button class="btn-add" onclick="computeSet('ter-3')">+1</button>
           </div>
         </div>
       </div>
@@ -291,6 +308,7 @@
             <button class="btn-time" onclick="startRest('ter-4', 45)">45s</button>
             <button class="btn-time" onclick="startRest('ter-4', 60)">60s</button>
             <button class="btn-reset" onclick="resetTimer('ter-4')">⏹</button>
+            <button class="btn-add" onclick="computeSet('ter-4')">+1</button>
           </div>
         </div>
       </div>
@@ -317,6 +335,7 @@
             <button class="btn-time" onclick="startRest('qua-1', 45)">45s</button>
             <button class="btn-time" onclick="startRest('qua-1', 60)">60s</button>
             <button class="btn-reset" onclick="resetTimer('qua-1')">⏹</button>
+            <button class="btn-add" onclick="computeSet('qua-1')">+1</button>
           </div>
         </div>
       </div>
@@ -336,6 +355,7 @@
             <button class="btn-time" onclick="startRest('qua-2', 45)">45s</button>
             <button class="btn-time" onclick="startRest('qua-2', 60)">60s</button>
             <button class="btn-reset" onclick="resetTimer('qua-2')">⏹</button>
+            <button class="btn-add" onclick="computeSet('qua-2')">+1</button>
           </div>
         </div>
       </div>
@@ -362,6 +382,7 @@
             <button class="btn-time" onclick="startRest('qui-1', 60)">60s</button>
             <button class="btn-time" onclick="startRest('qui-1', 90)">90s</button>
             <button class="btn-reset" onclick="resetTimer('qui-1')">⏹</button>
+            <button class="btn-add" onclick="computeSet('qui-1')">+1</button>
           </div>
         </div>
       </div>
@@ -381,6 +402,7 @@
             <button class="btn-time" onclick="startRest('qui-2', 60)">60s</button>
             <button class="btn-time" onclick="startRest('qui-2', 90)">90s</button>
             <button class="btn-reset" onclick="resetTimer('qui-2')">⏹</button>
+            <button class="btn-add" onclick="computeSet('qui-2')">+1</button>
           </div>
         </div>
       </div>
@@ -400,6 +422,7 @@
             <button class="btn-time" onclick="startRest('qui-3', 45)">45s</button>
             <button class="btn-time" onclick="startRest('qui-3', 60)">60s</button>
             <button class="btn-reset" onclick="resetTimer('qui-3')">⏹</button>
+            <button class="btn-add" onclick="computeSet('qui-3')">+1</button>
           </div>
         </div>
       </div>
@@ -426,6 +449,7 @@
             <button class="btn-time" onclick="startRest('sex-1', 60)">60s</button>
             <button class="btn-time" onclick="startRest('sex-1', 90)">90s</button>
             <button class="btn-reset" onclick="resetTimer('sex-1')">⏹</button>
+            <button class="btn-add" onclick="computeSet('sex-1')">+1</button>
           </div>
         </div>
       </div>
@@ -445,6 +469,7 @@
             <button class="btn-time" onclick="startRest('sex-2', 90)">90s</button>
             <button class="btn-time" onclick="startRest('sex-2', 120)">120s</button>
             <button class="btn-reset" onclick="resetTimer('sex-2')">⏹</button>
+            <button class="btn-add" onclick="computeSet('sex-2')">+1</button>
           </div>
         </div>
       </div>
@@ -464,6 +489,7 @@
             <button class="btn-time" onclick="startRest('sex-3', 60)">60s</button>
             <button class="btn-time" onclick="startRest('sex-3', 90)">90s</button>
             <button class="btn-reset" onclick="resetTimer('sex-3')">⏹</button>
+            <button class="btn-add" onclick="computeSet('sex-3')">+1</button>
           </div>
         </div>
       </div>
@@ -485,15 +511,12 @@
   </div>
 
 <script>
-  // Chaves baseadas na Data (Para o Histórico Mensal funcionar automático)
+  // Chaves baseadas na Data Local segura
   const dataHoje = new Date();
   const mesKey = dataHoje.getFullYear() + '-' + String(dataHoje.getMonth() + 1).padStart(2, '0');
   const mesesNomes = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
-  const mesAtualNome = mesesNomes[dataHoje.getMonth()];
+  document.getElementById('dash-month-title').textContent = '🗓️ ' + mesesNomes[dataHoje.getMonth()];
 
-  document.getElementById('dash-month-title').textContent = '🗓️ ' + mesAtualNome;
-
-  // Lógica principal ao carregar a página
   document.addEventListener('DOMContentLoaded', () => {
     autoOpenDetails();
     
@@ -516,7 +539,7 @@
     updateDashboard();
   });
 
-  // Marcação e desmarcação manual
+  // Marcação manual na caixinha
   function toggleDone(checkbox, cardId) {
     const card = document.getElementById(cardId);
     const totalSets = parseInt(card.dataset.sets);
@@ -528,7 +551,7 @@
       localStorage.setItem(cardId, 'true');
       localStorage.setItem('setCount-' + cardId, totalSets);
       setsSpan.textContent = totalSets;
-      checkIfDayCompleted(dayId); // Verifica se esse click finalizou o dia
+      checkIfDayCompleted(dayId); 
     } else {
       card.classList.remove('done');
       localStorage.setItem(cardId, 'false');
@@ -538,21 +561,14 @@
     updateDashboard();
   }
 
-  // Lógica do Cardio
+  // Salvar Cardio
   function saveCardio() {
-    const type = document.getElementById('cardio-type').value;
     const time = parseInt(document.getElementById('cardio-time').value);
-    
-    if(!time || time <= 0) {
-      alert('Insira uma quantidade de minutos válida!');
-      return;
-    }
+    if(!time || time <= 0) { alert('Insira os minutos!'); return; }
 
-    // Soma no Semanal
     let weeklyCardio = parseInt(localStorage.getItem('weeklyCardio')) || 0;
     localStorage.setItem('weeklyCardio', weeklyCardio + time);
 
-    // Soma no Mensal (Usando a chave do Mês Atual)
     let monthlyCardio = parseInt(localStorage.getItem('monthlyCardio_' + mesKey)) || 0;
     localStorage.setItem('monthlyCardio_' + mesKey, monthlyCardio + time);
 
@@ -562,38 +578,35 @@
     updateDashboard();
   }
 
-  // Verifica se o dia foi 100% concluído para somar no Mês
+  // Confere se bateu a meta do dia
   function checkIfDayCompleted(dayId) {
     const daySection = document.getElementById(dayId);
     const exercises = daySection.querySelectorAll('.exercise-card');
     const completedExercises = daySection.querySelectorAll('.exercise-card.done');
     
-    // Cria uma chave única para saber se ESSE dia específico já foi contado no mês
-    const dataCompletaStr = dataHoje.toISOString().split('T')[0]; 
+    const dataCompletaStr = dataHoje.getFullYear() + '-' + dataHoje.getMonth() + '-' + dataHoje.getDate(); 
     const dayLoggedKey = 'logged_' + dayId + '_' + dataCompletaStr;
 
     if (exercises.length > 0 && exercises.length === completedExercises.length) {
-      // Se não foi contado ainda hoje
       if (localStorage.getItem(dayLoggedKey) !== 'true') {
         localStorage.setItem(dayLoggedKey, 'true');
         
         let monthlyWorkouts = parseInt(localStorage.getItem('monthlyWorkouts_' + mesKey)) || 0;
         localStorage.setItem('monthlyWorkouts_' + mesKey, monthlyWorkouts + 1);
         
-        // Vibra pra comemorar o fim do treino
-        if (navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 300]);
+        if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
         alert('BOA! Mais um treino concluído para a conta do mês!');
+        updateDashboard();
       }
     }
   }
 
-  // Atualiza os painéis visuais
+  // Atualiza Visual do Dashboard
   function updateDashboard() {
     let completedDaysWeek = 0;
     let timePerMuscle = {};
     const days = document.querySelectorAll('.day-section');
 
-    // Estatísticas da Semana
     days.forEach(day => {
       const exercises = day.querySelectorAll('.exercise-card');
       const completedExercises = day.querySelectorAll('.exercise-card.done');
@@ -608,18 +621,15 @@
       timePerMuscle[muscle] = (timePerMuscle[muscle] || 0) + time;
     });
 
-    // Puxa valores
     let weeklyCardio = parseInt(localStorage.getItem('weeklyCardio')) || 0;
     let monthlyCardio = parseInt(localStorage.getItem('monthlyCardio_' + mesKey)) || 0;
     let monthlyWorkouts = parseInt(localStorage.getItem('monthlyWorkouts_' + mesKey)) || 0;
 
-    // Atualiza Textos
     document.getElementById('dash-week-days').textContent = completedDaysWeek + '/5';
     document.getElementById('dash-week-cardio').textContent = weeklyCardio + ' min';
     document.getElementById('dash-month-days').textContent = monthlyWorkouts;
     document.getElementById('dash-month-cardio').textContent = monthlyCardio + ' min';
 
-    // Lista de Músculos
     const dashMuscles = document.getElementById('dash-muscles');
     dashMuscles.innerHTML = '';
     if(Object.keys(timePerMuscle).length > 0) {
@@ -629,7 +639,7 @@
     }
   }
 
-  // Lógica Visual
+  // Abre gaveta certa
   function autoOpenDetails() {
     const days = document.querySelectorAll('.day-section');
     let opened = false;
@@ -645,7 +655,7 @@
     });
   }
 
-  // Cronômetro e Séries Automáticas
+  // Lógica de Tempo Baseada na Hora do Celular (Não Trava!)
   const timers = {};
   function startRest(id, seconds) {
     if (timers[id] && timers[id].interval) clearInterval(timers[id].interval);
@@ -653,15 +663,19 @@
     const display = document.getElementById('display-' + id);
     display.classList.remove('time-up');
     
-    timers[id] = { time: seconds, interval: null };
-    updateDisplay(id);
+    const targetTime = Date.now() + (seconds * 1000);
+    timers[id] = { interval: null };
+
+    updateDisplayRaw(id, seconds);
 
     timers[id].interval = setInterval(() => {
-      timers[id].time--;
-      if (timers[id].time > 0) {
-        updateDisplay(id);
+      const timeLeft = Math.ceil((targetTime - Date.now()) / 1000);
+      
+      if (timeLeft > 0) {
+        updateDisplayRaw(id, timeLeft);
       } else {
         clearInterval(timers[id].interval);
+        updateDisplayRaw(id, 0); 
         display.textContent = "BORA!";
         display.classList.add('time-up');
         if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
@@ -670,6 +684,15 @@
     }, 1000);
   }
 
+  function updateDisplayRaw(id, totalSeconds) {
+    const display = document.getElementById('display-' + id);
+    if(display.textContent === "BORA!") return; 
+    const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+    const seconds = String(totalSeconds % 60).padStart(2, '0');
+    display.textContent = `${minutes}:${seconds}`;
+  }
+
+  // Soma a série (Pelo timer ou botão manual)
   function computeSet(id) {
     const cardId = 'card-' + id;
     const card = document.getElementById(cardId);
@@ -694,26 +717,20 @@
 
   function resetTimer(id) {
     if (timers[id] && timers[id].interval) clearInterval(timers[id].interval);
-    timers[id] = { time: 0, interval: null };
+    timers[id] = { interval: null };
     const display = document.getElementById('display-' + id);
     display.textContent = "00:00";
     display.classList.remove('time-up');
   }
 
-  // Zerar apenas a Semana (Mantém histórico mensal)
   function resetWeeklyData() {
-    if(confirm('Isso vai desmarcar todos os exercícios da semana e zerar o cardio semanal. Seu histórico mensal será MANTIDO. Tem certeza?')) {
-      
-      // Apaga só as caixinhas marcadas e contagem de séries
+    if(confirm('Isso vai desmarcar os exercícios da semana e zerar o cardio semanal. Seu histórico MENSAL será mantido. Tem certeza?')) {
       document.querySelectorAll('.exercise-card').forEach(card => {
         const cardId = card.id;
         localStorage.removeItem(cardId);
         localStorage.removeItem('setCount-' + cardId);
       });
-
-      // Zera o Cardio Semanal
       localStorage.setItem('weeklyCardio', 0);
-      
       alert('Semana zerada! Bom recomeço!');
       location.reload(); 
     }
