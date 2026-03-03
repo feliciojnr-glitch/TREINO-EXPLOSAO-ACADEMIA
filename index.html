@@ -13,71 +13,51 @@
     padding: 15px;
     margin: 0;
     max-width: 100vw;
-    overflow-x: hidden; /* Impede a tela de "sambar" pros lados */
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
-  h1 { 
-    color: #f39c12; 
-    text-align: center; 
-    border-bottom: 2px solid #333; 
-    padding-bottom: 10px;
-    font-size: 1.5em;
-  }
+  h1 { color: #f39c12; text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; font-size: 1.5em; }
   
   /* DASHBOARD STYLES */
-  .dash-container {
-    display: flex;
-    flex-wrap: wrap; /* Garante que não vaze da tela */
-    gap: 10px;
-    margin-bottom: 25px;
-  }
+  .dash-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
   .dashboard {
-    background-color: #1a1a1a;
-    border: 1px solid #444;
-    border-radius: 10px;
-    padding: 15px;
-    flex: 1 1 45%;
-    min-width: 140px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    background-color: #1a1a1a; border: 1px solid #444; border-radius: 10px; padding: 15px;
+    flex: 1 1 45%; min-width: 140px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
   .dashboard.destaque { border-color: #f39c12; }
-  .dashboard h3 { margin-top: 0; font-size: 1em; text-align: center; border-bottom: 1px solid #333; padding-bottom: 8px; color: #fff;}
-  .dashboard.destaque h3 { color: #f39c12; }
   
-  .dash-stats { display: flex; flex-direction: column; gap: 8px; font-size: 0.9em; margin-top: 10px;}
+  .dash-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
+  .dash-header h3 { margin: 0; font-size: 1em; color: #fff; }
+  .dashboard.destaque h3 { color: #f39c12; text-align: center; width: 100%; }
+
+  /* MENU DE MÊS (NATIVO MOBILE) */
+  .month-selector {
+    background: #333; color: #f39c12; border: 1px solid #555; padding: 6px 10px;
+    border-radius: 6px; font-weight: bold; font-size: 0.9em; outline: none;
+  }
+
+  .dash-stats { display: flex; flex-direction: column; gap: 8px; font-size: 0.9em; }
   .dash-item { display: flex; justify-content: space-between; border-bottom: 1px solid #2a2a2a; padding-bottom: 5px; }
   .dash-item strong { color: #3498db; }
   .dash-item .highlight { color: #2ecc71; font-weight: bold; font-size: 1.1em;}
+  .dash-divider { margin-top: 15px; border-top: 1px dashed #444; padding-top: 10px; }
 
-  /* ÁREA DE CARDIO CORRIGIDA */
-  .cardio-section {
-    background-color: #1e1e1e;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 25px;
-    border-left: 4px solid #e74c3c;
-    width: 100%;
-  }
+  /* ÁREA DE CARDIO */
+  .cardio-section { background-color: #1e1e1e; border-radius: 8px; padding: 15px; margin-bottom: 25px; border-left: 4px solid #e74c3c; width: 100%; }
   .cardio-section h3 { margin: 0 0 10px 0; color: #e74c3c; font-size: 1.2em; }
-  .cardio-inputs { 
-    display: flex; 
-    flex-wrap: wrap; /* Faz os botões descerem de linha se não couber */
-    gap: 10px; 
-  }
-  .cardio-inputs input {
-    background-color: #2a2a2a; border: 1px solid #444; color: #fff;
-    padding: 12px; border-radius: 6px; font-size: 1em; width: 100%;
-  }
-  .cardio-inputs input[type="text"] { flex: 1 1 100%; min-width: 0; }
-  .cardio-inputs input[type="number"] { flex: 1 1 40%; min-width: 0; }
+  .cardio-inputs { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cardio-inputs input { background-color: #2a2a2a; border: 1px solid #444; color: #fff; padding: 12px; border-radius: 6px; font-size: 1em; width: 100%; }
+  .cardio-inputs input[type="text"] { flex: 1 1 100%; }
+  .cardio-inputs input[type="number"] { flex: 1 1 40%; }
   .btn-cardio { background-color: #e74c3c; color: #fff; border: none; border-radius: 6px; font-weight: bold; flex: 1 1 40%; cursor: pointer; padding: 12px; }
   .btn-cardio:active { background-color: #c0392b; }
 
-  /* GAVETAS EXPANSÍVEIS */
-  details { margin-bottom: 15px; background-color: #1e1e1e; border-radius: 8px; overflow: hidden; }
+  /* GAVETAS (DIAS DA SEMANA) */
+  details { margin-bottom: 15px; background-color: #1e1e1e; border-radius: 8px; overflow: hidden; transition: all 0.3s; }
   summary {
     background-color: #333; color: #ffffff; padding: 15px; font-size: 1.1em; font-weight: bold;
     cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; touch-action: manipulation;
+    transition: background-color 0.3s, color 0.3s;
   }
   summary::-webkit-details-marker { display: none; }
   summary::after { content: '▼'; color: #f39c12; font-size: 0.9em; transition: transform 0.3s; }
@@ -85,10 +65,14 @@
   details[open] summary { border-bottom: 2px solid #f39c12; }
   .day-content { padding: 15px 10px 5px 10px; }
 
+  /* DIA CONCLUÍDO (VERDE) */
+  .day-completed summary { background-color: #27ae60 !important; color: #fff !important; }
+  .day-completed summary::after { color: #fff; content: '✔'; transform: none !important; }
+
+  /* EXERCÍCIOS */
   .exercise-card { background-color: #252525; border-radius: 8px; padding: 15px; margin-bottom: 15px; border-left: 4px solid #444; transition: all 0.3s ease; }
   .exercise-card.done { border-left-color: #2ecc71; opacity: 0.6; }
   .exercise-card.done .exercise-name { text-decoration: line-through; color: #888; }
-  
   .exercise-header { display: flex; align-items: flex-start; gap: 12px; }
   input[type="checkbox"] { width: 24px; height: 24px; margin-top: 3px; accent-color: #2ecc71; }
   .exercise-info { flex-grow: 1; }
@@ -98,7 +82,7 @@
   .load { font-weight: bold; color: #3498db; margin: 3px 0; font-size: 0.9em; }
   .obs { font-size: 0.85em; color: #aaa; font-style: italic; margin-top: 5px; line-height: 1.4; }
   
-  /* CRONÔMETRO ATUALIZADO */
+  /* CRONÔMETRO */
   .timer-section { margin-top: 15px; background-color: #1a1a1a; padding: 10px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .timer-display { font-family: monospace; font-size: 2em; font-weight: bold; color: #fff; letter-spacing: 2px; }
   .timer-controls { display: flex; width: 100%; gap: 6px; justify-content: center; }
@@ -106,8 +90,7 @@
   button:active { background-color: #666; }
   button.btn-time { background-color: #2980b9; }
   button.btn-reset { background-color: #c0392b; flex: 0.4; }
-  button.btn-add { background-color: #8e44ad; flex: 0.4; } /* NOVO BOTAO +1 */
-  
+  button.btn-add { background-color: #8e44ad; flex: 0.4; }
   .time-up { color: #2ecc71; animation: pulse 1s infinite; }
   @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
@@ -122,31 +105,34 @@
 
   <div class="dash-container">
     <div class="dashboard destaque">
-      <h3>📅 SEMANA</h3>
+      <div class="dash-header">
+        <h3>📅 SEMANA</h3>
+      </div>
       <div class="dash-stats">
         <div class="dash-item">Treinos: <span class="highlight" id="dash-week-days">0/5</span></div>
         <div class="dash-item">Cardio: <strong id="dash-week-cardio">0 min</strong></div>
       </div>
-      <div class="dash-stats" id="dash-muscles" style="margin-top: 15px; border-top: 1px dashed #444; padding-top: 10px;">
+      <div class="dash-stats dash-divider" id="dash-week-muscles">
         </div>
     </div>
 
     <div class="dashboard">
-      <h3 id="dash-month-title">🗓️ MÊS</h3>
-      <div class="dash-stats">
-        <div class="dash-item">Treinos: <span class="highlight" id="dash-month-days">0</span></div>
-        <div class="dash-item" style="flex-direction: column; align-items: center; margin-top: 10px;">
-          <span style="color: #aaa; font-size: 0.9em;">Total Cardio</span>
-          <strong id="dash-month-cardio" style="font-size: 1.5em; color: #e74c3c;">0 min</strong>
-        </div>
+      <div class="dash-header">
+        <h3>🗓️ MÊS</h3>
+        <select id="month-select" class="month-selector" onchange="updateMonthDashboard()"></select>
       </div>
+      <div class="dash-stats">
+        <div class="dash-item">Treinos feitos: <span class="highlight" id="dash-month-days">0</span></div>
+        <div class="dash-item">Total Cardio: <strong id="dash-month-cardio">0 min</strong></div>
+      </div>
+      <div class="dash-stats dash-divider" id="dash-month-muscles">
+        </div>
     </div>
   </div>
 
   <details class="day-section" id="day-seg">
     <summary>SEGUNDA (Força)</summary>
     <div class="day-content">
-      
       <div class="exercise-card" id="card-seg-1" data-muscle="Peito/Tríceps" data-time="12" data-sets="4">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-seg-1')">
@@ -166,7 +152,6 @@
           </div>
         </div>
       </div>
-
       <div class="exercise-card" id="card-seg-2" data-muscle="Costas" data-time="12" data-sets="4">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-seg-2')">
@@ -186,7 +171,6 @@
           </div>
         </div>
       </div>
-
       <div class="exercise-card" id="card-seg-3" data-muscle="Peito/Tríceps" data-time="8" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-seg-3')">
@@ -206,7 +190,6 @@
           </div>
         </div>
       </div>
-      
       <div class="exercise-card" id="card-seg-4" data-muscle="Ombros" data-time="10" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-seg-4')">
@@ -226,14 +209,12 @@
           </div>
         </div>
       </div>
-
     </div>
   </details>
 
   <details class="day-section" id="day-ter">
     <summary>TERÇA (Salto Vertical)</summary>
     <div class="day-content">
-      
       <div class="exercise-card" id="card-ter-1" data-muscle="Quadríceps" data-time="8" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-ter-1')">
@@ -253,7 +234,6 @@
           </div>
         </div>
       </div>
-
       <div class="exercise-card" id="card-ter-2" data-muscle="Quadríceps" data-time="15" data-sets="4">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-ter-2')">
@@ -273,7 +253,6 @@
           </div>
         </div>
       </div>
-
       <div class="exercise-card" id="card-ter-3" data-muscle="Quadríceps" data-time="10" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-ter-3')">
@@ -293,7 +272,6 @@
           </div>
         </div>
       </div>
-
       <div class="exercise-card" id="card-ter-4" data-muscle="Panturrilha" data-time="10" data-sets="4">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-ter-4')">
@@ -312,14 +290,12 @@
           </div>
         </div>
       </div>
-
     </div>
   </details>
 
   <details class="day-section" id="day-qua">
     <summary>QUARTA (Core/Prevenção)</summary>
     <div class="day-content">
-      
       <div class="exercise-card" id="card-qua-1" data-muscle="Core" data-time="10" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-qua-1')">
@@ -339,7 +315,6 @@
           </div>
         </div>
       </div>
-
       <div class="exercise-card" id="card-qua-2" data-muscle="Core" data-time="10" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-qua-2')">
@@ -359,14 +334,12 @@
           </div>
         </div>
       </div>
-
     </div>
   </details>
 
   <details class="day-section" id="day-qui">
     <summary>QUINTA (Tração)</summary>
     <div class="day-content">
-      
       <div class="exercise-card" id="card-qui-1" data-muscle="Costas" data-time="12" data-sets="4">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-qui-1')">
@@ -386,7 +359,6 @@
           </div>
         </div>
       </div>
-
       <div class="exercise-card" id="card-qui-2" data-muscle="Costas" data-time="10" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-qui-2')">
@@ -406,7 +378,6 @@
           </div>
         </div>
       </div>
-
       <div class="exercise-card" id="card-qui-3" data-muscle="Ombros" data-time="8" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-qui-3')">
@@ -426,14 +397,12 @@
           </div>
         </div>
       </div>
-
     </div>
   </details>
 
   <details class="day-section" id="day-sex">
     <summary>SEXTA (Posterior - Motor)</summary>
     <div class="day-content">
-      
       <div class="exercise-card" id="card-sex-1" data-muscle="Posterior/Glúteo" data-time="8" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-sex-1')">
@@ -453,7 +422,6 @@
           </div>
         </div>
       </div>
-
       <div class="exercise-card" id="card-sex-2" data-muscle="Posterior/Glúteo" data-time="15" data-sets="4">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-sex-2')">
@@ -473,7 +441,6 @@
           </div>
         </div>
       </div>
-      
       <div class="exercise-card" id="card-sex-3" data-muscle="Quadríceps" data-time="12" data-sets="3">
         <div class="exercise-header">
           <input type="checkbox" onchange="toggleDone(this, 'card-sex-3')">
@@ -493,7 +460,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </details>
 
@@ -507,24 +473,23 @@
   </div>
 
   <div class="reset-all-container">
-    <button class="btn-reset-all" onclick="resetWeeklyData()">🔄 Zerar a Semana (Mantém o Mês)</button>
+    <button class="btn-reset-all" onclick="resetWeeklyData()">🔄 Zerar a Semana (Mantém Histórico do Mês)</button>
   </div>
 
 <script>
-  // Chaves baseadas na Data Local segura
+  // Chaves do Mês Atual
   const dataHoje = new Date();
-  const mesKey = dataHoje.getFullYear() + '-' + String(dataHoje.getMonth() + 1).padStart(2, '0');
-  const mesesNomes = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
-  document.getElementById('dash-month-title').textContent = '🗓️ ' + mesesNomes[dataHoje.getMonth()];
+  const currentMesKey = dataHoje.getFullYear() + '-' + String(dataHoje.getMonth() + 1).padStart(2, '0');
+  const mesesNomes = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
 
   document.addEventListener('DOMContentLoaded', () => {
-    autoOpenDetails();
+    initMonthSelector();
     
+    // Restaura Checkboxes e Séries
     document.querySelectorAll('.exercise-card').forEach(card => {
       const cardId = card.id;
       const isDone = localStorage.getItem(cardId) === 'true';
       const checkbox = card.querySelector('input[type="checkbox"]');
-      
       const totalSets = parseInt(card.dataset.sets);
       let savedSets = parseInt(localStorage.getItem('setCount-' + cardId)) || 0;
       
@@ -536,32 +501,72 @@
       document.getElementById('sets-' + cardId.replace('card-', '')).textContent = savedSets;
     });
 
-    updateDashboard();
+    updateWeekDashboard();
+    updateMonthDashboard();
   });
 
-  // Marcação manual na caixinha
+  // PREENCHE O MENU DROPDOWN DE MÊS
+  function initMonthSelector() {
+    const select = document.getElementById('month-select');
+    let monthsFound = new Set();
+    monthsFound.add(currentMesKey); 
+    
+    // Procura na memória todos os meses que você já treinou
+    for(let i=0; i<localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if(key.startsWith('monthlyWorkouts_')) {
+            monthsFound.add(key.replace('monthlyWorkouts_', ''));
+        }
+    }
+    
+    let sortedMonths = Array.from(monthsFound).sort().reverse();
+    sortedMonths.forEach(m => {
+        let [yyyy, mm] = m.split('-');
+        let option = document.createElement('option');
+        option.value = m;
+        option.textContent = mesesNomes[parseInt(mm)-1] + ' ' + yyyy;
+        if(m === currentMesKey) option.selected = true;
+        select.appendChild(option);
+    });
+  }
+
+  // MARCA/DESMARCA EXERCÍCIO
   function toggleDone(checkbox, cardId) {
     const card = document.getElementById(cardId);
     const totalSets = parseInt(card.dataset.sets);
     const setsSpan = document.getElementById('sets-' + cardId.replace('card-', ''));
     const dayId = card.closest('.day-section').id;
+    const muscle = card.dataset.muscle;
+    const time = parseInt(card.dataset.time);
 
     if (checkbox.checked) {
       card.classList.add('done');
       localStorage.setItem(cardId, 'true');
       localStorage.setItem('setCount-' + cardId, totalSets);
       setsSpan.textContent = totalSets;
+      updateMonthlyMuscle(muscle, time, true);
       checkIfDayCompleted(dayId); 
     } else {
       card.classList.remove('done');
       localStorage.setItem(cardId, 'false');
       localStorage.setItem('setCount-' + cardId, 0);
       setsSpan.textContent = '0';
+      updateMonthlyMuscle(muscle, time, false);
+      checkIfDayCompleted(dayId); 
     }
-    updateDashboard();
+    updateWeekDashboard();
+    updateMonthDashboard();
   }
 
-  // Salvar Cardio
+  // ATUALIZA O TEMPO MUSCULAR DO MÊS
+  function updateMonthlyMuscle(muscle, time, isAdding) {
+      let monthMuscles = JSON.parse(localStorage.getItem('monthlyMuscles_' + currentMesKey)) || {};
+      monthMuscles[muscle] = (monthMuscles[muscle] || 0) + (isAdding ? time : -time);
+      if(monthMuscles[muscle] < 0) monthMuscles[muscle] = 0;
+      localStorage.setItem('monthlyMuscles_' + currentMesKey, JSON.stringify(monthMuscles));
+  }
+
+  // SALVAR CARDIO
   function saveCardio() {
     const time = parseInt(document.getElementById('cardio-time').value);
     if(!time || time <= 0) { alert('Insira os minutos!'); return; }
@@ -569,16 +574,17 @@
     let weeklyCardio = parseInt(localStorage.getItem('weeklyCardio')) || 0;
     localStorage.setItem('weeklyCardio', weeklyCardio + time);
 
-    let monthlyCardio = parseInt(localStorage.getItem('monthlyCardio_' + mesKey)) || 0;
-    localStorage.setItem('monthlyCardio_' + mesKey, monthlyCardio + time);
+    let monthlyCardio = parseInt(localStorage.getItem('monthlyCardio_' + currentMesKey)) || 0;
+    localStorage.setItem('monthlyCardio_' + currentMesKey, monthlyCardio + time);
 
     alert(time + ' minutos salvos com sucesso!');
     document.getElementById('cardio-type').value = '';
     document.getElementById('cardio-time').value = '';
-    updateDashboard();
+    updateWeekDashboard();
+    updateMonthDashboard();
   }
 
-  // Confere se bateu a meta do dia
+  // VERIFICA SE O DIA FECHOU (PARA FICAR VERDE E CONTAR NO MÊS)
   function checkIfDayCompleted(dayId) {
     const daySection = document.getElementById(dayId);
     const exercises = daySection.querySelectorAll('.exercise-card');
@@ -588,21 +594,23 @@
     const dayLoggedKey = 'logged_' + dayId + '_' + dataCompletaStr;
 
     if (exercises.length > 0 && exercises.length === completedExercises.length) {
+      daySection.classList.add('day-completed'); // Fica Verde
+      daySection.removeAttribute('open'); // Fecha a gaveta
+      
       if (localStorage.getItem(dayLoggedKey) !== 'true') {
         localStorage.setItem(dayLoggedKey, 'true');
-        
-        let monthlyWorkouts = parseInt(localStorage.getItem('monthlyWorkouts_' + mesKey)) || 0;
-        localStorage.setItem('monthlyWorkouts_' + mesKey, monthlyWorkouts + 1);
-        
+        let monthlyWorkouts = parseInt(localStorage.getItem('monthlyWorkouts_' + currentMesKey)) || 0;
+        localStorage.setItem('monthlyWorkouts_' + currentMesKey, monthlyWorkouts + 1);
         if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
-        alert('BOA! Mais um treino concluído para a conta do mês!');
-        updateDashboard();
+        alert('BOA! Dia concluído!');
       }
+    } else {
+      daySection.classList.remove('day-completed');
     }
   }
 
-  // Atualiza Visual do Dashboard
-  function updateDashboard() {
+  // DASHBOARD DA SEMANA (Dinâmico conforme a tela)
+  function updateWeekDashboard() {
     let completedDaysWeek = 0;
     let timePerMuscle = {};
     const days = document.querySelectorAll('.day-section');
@@ -612,7 +620,13 @@
       const completedExercises = day.querySelectorAll('.exercise-card.done');
       if (exercises.length > 0 && exercises.length === completedExercises.length) {
         completedDaysWeek++;
+        day.classList.add('day-completed');
+      } else {
+        day.classList.remove('day-completed');
       }
+      
+      // Abre a primeira gaveta que não está verde
+      if (completedDaysWeek === 0 && day.id === 'day-seg' && !day.classList.contains('day-completed')) day.setAttribute('open', 'true');
     });
 
     document.querySelectorAll('.exercise-card.done').forEach(card => {
@@ -622,55 +636,53 @@
     });
 
     let weeklyCardio = parseInt(localStorage.getItem('weeklyCardio')) || 0;
-    let monthlyCardio = parseInt(localStorage.getItem('monthlyCardio_' + mesKey)) || 0;
-    let monthlyWorkouts = parseInt(localStorage.getItem('monthlyWorkouts_' + mesKey)) || 0;
-
     document.getElementById('dash-week-days').textContent = completedDaysWeek + '/5';
     document.getElementById('dash-week-cardio').textContent = weeklyCardio + ' min';
-    document.getElementById('dash-month-days').textContent = monthlyWorkouts;
-    document.getElementById('dash-month-cardio').textContent = monthlyCardio + ' min';
 
-    const dashMuscles = document.getElementById('dash-muscles');
+    const dashMuscles = document.getElementById('dash-week-muscles');
     dashMuscles.innerHTML = '';
-    if(Object.keys(timePerMuscle).length > 0) {
-      for (const [muscle, minutes] of Object.entries(timePerMuscle)) {
-        dashMuscles.innerHTML += `<div class="dash-item"><span>${muscle}</span> <strong>${minutes} min</strong></div>`;
-      }
+    for (const [muscle, minutes] of Object.entries(timePerMuscle)) {
+      dashMuscles.innerHTML += `<div class="dash-item"><span>${muscle}</span> <strong>${minutes} min</strong></div>`;
     }
   }
 
-  // Abre gaveta certa
-  function autoOpenDetails() {
-    const days = document.querySelectorAll('.day-section');
-    let opened = false;
-    days.forEach(day => {
-      const exercises = day.querySelectorAll('.exercise-card');
-      const completedExercises = day.querySelectorAll('.exercise-card.done');
-      if (!opened && exercises.length !== completedExercises.length) {
-        day.setAttribute('open', 'true');
-        opened = true;
-      } else {
-        day.removeAttribute('open');
+  // DASHBOARD DO MÊS (Muda conforme o Menu Dropdown)
+  function updateMonthDashboard() {
+    const selectedMonth = document.getElementById('month-select').value;
+    
+    let mWorkouts = parseInt(localStorage.getItem('monthlyWorkouts_' + selectedMonth)) || 0;
+    let mCardio = parseInt(localStorage.getItem('monthlyCardio_' + selectedMonth)) || 0;
+    let mMuscles = JSON.parse(localStorage.getItem('monthlyMuscles_' + selectedMonth)) || {};
+
+    document.getElementById('dash-month-days').textContent = mWorkouts;
+    document.getElementById('dash-month-cardio').textContent = mCardio + ' min';
+
+    const dashMonthMuscles = document.getElementById('dash-month-muscles');
+    dashMonthMuscles.innerHTML = '';
+    let hasMuscles = false;
+    
+    for (const [muscle, minutes] of Object.entries(mMuscles)) {
+      if(minutes > 0) {
+        hasMuscles = true;
+        let hoursText = minutes >= 60 ? `<span style="color:#888;font-size:0.8em;margin-left:5px">(${(minutes/60).toFixed(1)}h)</span>` : '';
+        dashMonthMuscles.innerHTML += `<div class="dash-item"><span>${muscle}</span> <div><strong>${minutes} min</strong> ${hoursText}</div></div>`;
       }
-    });
+    }
+    if(!hasMuscles) dashMonthMuscles.innerHTML = `<div class="dash-item" style="color:#888; justify-content:center;">Sem dados musculares.</div>`;
   }
 
-  // Lógica de Tempo Baseada na Hora do Celular (Não Trava!)
+  // CRONÔMETRO (Mantém lógica anti-travamento de tela)
   const timers = {};
   function startRest(id, seconds) {
     if (timers[id] && timers[id].interval) clearInterval(timers[id].interval);
-    
     const display = document.getElementById('display-' + id);
     display.classList.remove('time-up');
-    
     const targetTime = Date.now() + (seconds * 1000);
     timers[id] = { interval: null };
 
     updateDisplayRaw(id, seconds);
-
     timers[id].interval = setInterval(() => {
       const timeLeft = Math.ceil((targetTime - Date.now()) / 1000);
-      
       if (timeLeft > 0) {
         updateDisplayRaw(id, timeLeft);
       } else {
@@ -692,7 +704,6 @@
     display.textContent = `${minutes}:${seconds}`;
   }
 
-  // Soma a série (Pelo timer ou botão manual)
   function computeSet(id) {
     const cardId = 'card-' + id;
     const card = document.getElementById(cardId);
@@ -723,8 +734,9 @@
     display.classList.remove('time-up');
   }
 
+  // ZERAR A SEMANA SEM AFETAR O MÊS
   function resetWeeklyData() {
-    if(confirm('Isso vai desmarcar os exercícios da semana e zerar o cardio semanal. Seu histórico MENSAL será mantido. Tem certeza?')) {
+    if(confirm('Isso vai desmarcar os exercícios e zerar o cardio da semana. O histórico MENSAL será mantido. Tem certeza?')) {
       document.querySelectorAll('.exercise-card').forEach(card => {
         const cardId = card.id;
         localStorage.removeItem(cardId);
