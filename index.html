@@ -94,9 +94,14 @@
   .time-up { color: #2ecc71; animation: pulse 1s infinite; }
   @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-  .reset-all-container { text-align: center; margin-top: 30px; margin-bottom: 30px; width: 100%; }
-  .btn-reset-all { background-color: #444; color: #fff; border: 1px solid #666; padding: 15px 30px; font-size: 1.1em; width: 100%; border-radius: 8px; }
+  /* BOTÕES DE RESET */
+  .reset-all-container { display: flex; flex-direction: column; gap: 10px; text-align: center; margin-top: 30px; margin-bottom: 30px; width: 100%; }
+  .btn-reset-all { background-color: #444; color: #fff; border: 1px solid #666; padding: 15px; font-size: 1.1em; width: 100%; border-radius: 8px; }
   .btn-reset-all:active { background-color: #222; }
+  
+  /* Novo botão de Reset do Mês */
+  .btn-reset-month { background-color: #c0392b; color: #fff; border: 1px solid #e74c3c; padding: 15px; font-size: 1.1em; width: 100%; border-radius: 8px; }
+  .btn-reset-month:active { background-color: #a53125; }
 </style>
 </head>
 <body>
@@ -474,6 +479,7 @@
 
   <div class="reset-all-container">
     <button class="btn-reset-all" onclick="resetWeeklyData()">🔄 Zerar a Semana (Mantém Histórico do Mês)</button>
+    <button class="btn-reset-month" onclick="resetMonthlyData()">🗑️ Zerar Mês Selecionado</button>
   </div>
 
 <script>
@@ -505,13 +511,18 @@
     updateMonthDashboard();
   });
 
-  // PREENCHE O MENU DROPDOWN DE MÊS
+  // PREENCHE O MENU DROPDOWN DE MÊS (AGORA COM TODOS OS 12 MESES)
   function initMonthSelector() {
     const select = document.getElementById('month-select');
     let monthsFound = new Set();
-    monthsFound.add(currentMesKey); 
     
-    // Procura na memória todos os meses que você já treinou
+    // Força a inclusão de todos os 12 meses do ano atual
+    const anoAtual = dataHoje.getFullYear();
+    for(let i=1; i<=12; i++) {
+        monthsFound.add(`${anoAtual}-${String(i).padStart(2, '0')}`);
+    }
+
+    // Procura na memória se tem outros meses (ex: de anos anteriores)
     for(let i=0; i<localStorage.length; i++) {
         let key = localStorage.key(i);
         if(key.startsWith('monthlyWorkouts_')) {
@@ -519,6 +530,7 @@
         }
     }
     
+    // Ordena do mais recente para o mais antigo (ex: DEZ, NOV... JAN)
     let sortedMonths = Array.from(monthsFound).sort().reverse();
     sortedMonths.forEach(m => {
         let [yyyy, mm] = m.split('-');
@@ -671,7 +683,7 @@
     if(!hasMuscles) dashMonthMuscles.innerHTML = `<div class="dash-item" style="color:#888; justify-content:center;">Sem dados musculares.</div>`;
   }
 
-  // CRONÔMETRO (Mantém lógica anti-travamento de tela)
+  // CRONÔMETRO
   const timers = {};
   function startRest(id, seconds) {
     if (timers[id] && timers[id].interval) clearInterval(timers[id].interval);
@@ -745,6 +757,22 @@
       localStorage.setItem('weeklyCardio', 0);
       alert('Semana zerada! Bom recomeço!');
       location.reload(); 
+    }
+  }
+
+  // NOVO: ZERAR O MÊS SELECIONADO NO DROPDOWN
+  function resetMonthlyData() {
+    const selectedMonth = document.getElementById('month-select').value;
+    const [yyyy, mm] = selectedMonth.split('-');
+    const nomeMes = mesesNomes[parseInt(mm)-1];
+
+    if(confirm(`Tem certeza que deseja APAGAR TODOS OS DADOS do mês de ${nomeMes} ${yyyy}? Isso não pode ser desfeito.`)) {
+      localStorage.removeItem('monthlyWorkouts_' + selectedMonth);
+      localStorage.removeItem('monthlyCardio_' + selectedMonth);
+      localStorage.removeItem('monthlyMuscles_' + selectedMonth);
+      
+      alert(`Dados de ${nomeMes} zerados com sucesso!`);
+      location.reload(); // Recarrega para atualizar os dashboards na tela
     }
   }
 </script>
